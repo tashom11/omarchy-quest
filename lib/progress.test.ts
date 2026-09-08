@@ -65,27 +65,31 @@ describe('recordBuildResult', () => {
 });
 
 describe('updateStreak', () => {
+  // Dates are built with the local-time constructor (year, monthIndex, day)
+  // rather than parsed from an ISO string, which Date always interprets as
+  // UTC — that would make these tests flaky depending on the machine/CI
+  // runner's timezone, exactly the class of bug updateStreak itself fixes.
   it('starts a streak at 1 on the first play', () => {
-    const progress = updateStreak(initialProgress, new Date('2026-01-01'));
+    const progress = updateStreak(initialProgress, new Date(2026, 0, 1));
     expect(progress.streak).toBe(1);
     expect(progress.lastPlayedDay).toBe('2026-01-01');
   });
 
   it('does not increment the streak twice on the same day', () => {
-    const day1 = updateStreak(initialProgress, new Date('2026-01-01T08:00:00Z'));
-    const stillDay1 = updateStreak(day1, new Date('2026-01-01T20:00:00Z'));
+    const day1 = updateStreak(initialProgress, new Date(2026, 0, 1, 8, 0));
+    const stillDay1 = updateStreak(day1, new Date(2026, 0, 1, 20, 0));
     expect(stillDay1.streak).toBe(1);
   });
 
   it('increments the streak on the very next day', () => {
-    const day1 = updateStreak(initialProgress, new Date('2026-01-01'));
-    const day2 = updateStreak(day1, new Date('2026-01-02'));
+    const day1 = updateStreak(initialProgress, new Date(2026, 0, 1));
+    const day2 = updateStreak(day1, new Date(2026, 0, 2));
     expect(day2.streak).toBe(2);
   });
 
   it('resets the streak to 1 after skipping a day', () => {
-    const day1 = updateStreak(initialProgress, new Date('2026-01-01'));
-    const day3 = updateStreak(day1, new Date('2026-01-03'));
+    const day1 = updateStreak(initialProgress, new Date(2026, 0, 1));
+    const day3 = updateStreak(day1, new Date(2026, 0, 3));
     expect(day3.streak).toBe(1);
   });
 });

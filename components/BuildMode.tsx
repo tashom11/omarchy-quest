@@ -10,7 +10,7 @@ const DECOY_COUNT = 3;
 const DRAG_THRESHOLD_PX = 8; // distance before a press counts as a drag
 
 type Chunk = { id: string; text: string };
-type DragState = { id: string; x: number; y: number };
+type DragState = { id: string };
 
 type Props = {
   questions: Command[];
@@ -56,9 +56,38 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
   const pressStart = useRef<{ id: string; x: number; y: number } | null>(null);
   const justFinishedDragging = useRef(false);
 
+  // The drag "ghost" tooltip follows the pointer via a direct DOM mutation
+  // (transform, batched through requestAnimationFrame) instead of React
+  // state: state would re-render the component on every single pointermove
+  // (often >60/s), and `left`/`top` positioning would force a layout+paint
+  // on top of that. `transform` is composited on the GPU with no layout
+  // cost, and rAF caps updates to the display's actual refresh rate.
+  const ghostRef = useRef<HTMLDivElement | null>(null);
+  const pendingGhostPos = useRef<{ x: number; y: number } | null>(null);
+  const ghostRafId = useRef<number | null>(null);
+
   function updateDrag(next: DragState | null) {
     dragRef.current = next;
     setDrag(next);
+  }
+
+  function scheduleGhostMove(x: number, y: number) {
+    pendingGhostPos.current = { x, y };
+    if (ghostRafId.current !== null) return;
+    ghostRafId.current = requestAnimationFrame(() => {
+      ghostRafId.current = null;
+      const pos = pendingGhostPos.current;
+      if (pos && ghostRef.current) {
+        ghostRef.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
+      }
+    });
+  }
+
+  function cancelGhostMove() {
+    if (ghostRafId.current !== null) {
+      cancelAnimationFrame(ghostRafId.current);
+      ghostRafId.current = null;
+    }
   }
 
   const question = questions[index];
@@ -135,10 +164,9 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
         const dx = e.clientX - start.x;
         const dy = e.clientY - start.y;
         if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return;
-        updateDrag({ id: start.id, x: e.clientX, y: e.clientY });
-      } else {
-        updateDrag({ ...dragRef.current, x: e.clientX, y: e.clientY });
+        updateDrag({ id: start.id });
       }
+      scheduleGhostMove(e.clientX, e.clientY);
     }
 
     function onUp(e: PointerEvent) {
@@ -149,6 +177,7 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
 
       dropAtPoint(current.id, e.clientX, e.clientY);
       updateDrag(null);
+      cancelGhostMove();
       justFinishedDragging.current = true;
       setTimeout(() => {
         justFinishedDragging.current = false;
@@ -162,6 +191,7 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
+      cancelGhostMove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -221,8 +251,10 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
     <div className="min-h-screen px-4 py-8 flex flex-col items-center gap-6">
       {drag && (
         <div
-          className="fixed z-50 pointer-events-none px-3 py-1.5 rounded-md bg-accent text-background font-mono text-sm font-bold shadow-lg"
-          style={{ left: drag.x, top: drag.y, transform: 'translate(-50%, -50%)' }}
+          ref={ghostRef}
+          aria-hidden="true"
+          className="fixed left-0 top-0 z-50 pointer-events-none px-3 py-1.5 rounded-md bg-accent text-background font-mono text-sm font-bold shadow-lg"
+          style={{ transform: 'translate3d(0, 0, 0) translate(-50%, -50%)', willChange: 'transform' }}
         >
           {textOf(drag.id)}
         </div>
@@ -289,6 +321,12 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
         <div aria-live="polite">
           {state === 'incomplete' && <p className="font-mono text-sm text-warning mb-3">{t.build.incomplete}</p>}
           {state === 'incorrect' && <p className="font-mono text-sm text-danger mb-3">{t.build.incorrect}</p>}
+          {state === 'correct' && (
+            <p className="font-mono text-sm text-accent mb-3">
+              {t.build.exact}{' '}
+              <span className="text-slate-500">({attempts === 0 ? t.build.firstTry : t.build.afterRetry})</span>
+            </p>
+          )}
         </div>
 
         {state !== 'correct' && (
@@ -306,9 +344,6 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
 
         {state === 'correct' && (
           <div className="space-y-3">
-            <p className="font-mono text-sm text-accent">
-              {t.build.exact} <span className="text-slate-500">({attempts === 0 ? t.build.firstTry : t.build.afterRetry})</span>
-            </p>
             <p className="text-sm text-slate-400">{question.explanation[language]}</p>
             <button onClick={next} className="btn-primary">
               {index + 1 >= questions.length ? t.build.seeResult : t.build.continueLabel}

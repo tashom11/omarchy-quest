@@ -33,6 +33,10 @@ export default function QuizRound({ questions, onFinish, onQuit }: Props) {
   const [timer, setTimer] = useState(TIME_PER_QUESTION);
   const [answerState, setAnswerState] = useState<'waiting' | 'correct' | 'incorrect'>('waiting');
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  // Lets a player stop the countdown entirely (WCAG 2.2.1 Timing Adjustable):
+  // a hard per-question timer with no way to pause/extend it would otherwise
+  // be a real barrier for anyone who needs more time to read or decide.
+  const [isPaused, setIsPaused] = useState(false);
 
   const question = questions[index];
   const maxScore = questions.length * (BASE_POINTS + MAX_BONUS_POINTS);
@@ -48,10 +52,11 @@ export default function QuizRound({ questions, onFinish, onQuit }: Props) {
     setTimer(TIME_PER_QUESTION);
     setAnswerState('waiting');
     setSelectedChoice(null);
+    setIsPaused(false);
   }, [index]);
 
   useEffect(() => {
-    if (answerState !== 'waiting') return undefined;
+    if (answerState !== 'waiting' || isPaused) return undefined;
     if (timer <= 0) {
       submit(null);
       return undefined;
@@ -59,7 +64,7 @@ export default function QuizRound({ questions, onFinish, onQuit }: Props) {
     const timeout = setTimeout(() => setTimer((s) => s - 1), 1000);
     return () => clearTimeout(timeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timer, answerState]);
+  }, [timer, answerState, isPaused]);
 
   function submit(choice: string | null) {
     if (answerState !== 'waiting') return;
@@ -109,19 +114,36 @@ export default function QuizRound({ questions, onFinish, onQuit }: Props) {
         </div>
       </div>
 
-      <div
-        className="w-full max-w-2xl h-1.5 bg-panelLight rounded-full overflow-hidden"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={TIME_PER_QUESTION}
-        aria-valuenow={timer}
-        aria-label="Time remaining"
-      >
+      <div className="w-full max-w-2xl flex items-center gap-3">
         <div
-          className="h-full bg-accent transition-all duration-1000 ease-linear"
-          style={{ width: `${(timer / TIME_PER_QUESTION) * 100}%` }}
-        />
+          className="flex-1 h-1.5 bg-panelLight rounded-full overflow-hidden"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={TIME_PER_QUESTION}
+          aria-valuenow={timer}
+          aria-label="Time remaining"
+        >
+          <div
+            className="h-full bg-accent transition-all duration-1000 ease-linear"
+            style={{ width: `${(timer / TIME_PER_QUESTION) * 100}%` }}
+          />
+        </div>
+        {answerState === 'waiting' && (
+          <button
+            onClick={() => setIsPaused((p) => !p)}
+            className="font-mono text-xs text-slate-400 hover:text-slate-200 whitespace-nowrap"
+            aria-pressed={isPaused}
+          >
+            {isPaused ? t.quiz.resume : t.quiz.pause}
+          </button>
+        )}
       </div>
+
+      {isPaused && answerState === 'waiting' && (
+        <p className="font-mono text-xs text-slate-500" role="status">
+          {t.quiz.paused}
+        </p>
+      )}
 
       {combo >= 3 && answerState === 'waiting' && (
         <p className="font-mono text-warning text-sm animate-pulseSuccess">

@@ -62,6 +62,9 @@ export type Dictionary = {
     seeResult: string;
     nextQuestion: string;
     missHumor: string[];
+    pause: string;
+    resume: string;
+    paused: string;
   };
   result: {
     done: string;
@@ -137,6 +140,9 @@ const dictionaries: Record<Language, Dictionary> = {
         "Ton clavier n'a pas apprécié ce choix.",
         'Même un `rm -rf` accidentel fait moins mal.',
       ],
+      pause: '⏸ Pause',
+      resume: '▶ Reprendre',
+      paused: 'En pause — le chrono est arrêté.',
     },
     result: {
       done: 'terminé',
@@ -214,6 +220,9 @@ const dictionaries: Record<Language, Dictionary> = {
         'Your keyboard did not approve of that choice.',
         'Even an accidental `rm -rf` hurts less.',
       ],
+      pause: '⏸ Pause',
+      resume: '▶ Resume',
+      paused: 'Paused — the timer is stopped.',
     },
     result: {
       done: 'done',
@@ -242,8 +251,14 @@ type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
+const LANGUAGE_STORAGE_KEY = 'omarchy-quest-language';
+
+function isLanguage(value: unknown): value is Language {
+  return value === 'fr' || value === 'en';
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useLocalStorage<Language>('omarchy-quest-language', 'fr');
+  const [language, setLanguage] = useLocalStorage<Language>(LANGUAGE_STORAGE_KEY, 'fr', isLanguage);
 
   // Keeps the document's lang attribute in sync (WCAG 3.1.1 / RGAA 8.3),
   // since the language is a client-side preference, not a server route.
@@ -256,7 +271,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   // explicit preference was ever saved; once it runs, the resulting
   // choice is persisted like any manual toggle, so it never fires again.
   useEffect(() => {
-    const stored = window.localStorage.getItem('omarchy-quest-language');
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
     if (stored !== null) return;
     const browserLanguage = navigator.language?.toLowerCase() ?? '';
     if (!browserLanguage.startsWith('fr')) {

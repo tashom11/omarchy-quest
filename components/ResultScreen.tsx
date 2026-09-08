@@ -16,9 +16,9 @@ export default function ResultScreen({ score, maxScore, stars, title, onReplay, 
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 gap-8">
-      <p className="font-mono text-accent text-sm tracking-widest uppercase">
+      <h2 className="font-mono text-accent text-sm tracking-widest uppercase">
         {title} — {t.result.done}
-      </p>
+      </h2>
 
       <div className="text-5xl flex gap-2" aria-label={`${stars} / 3 stars`}>
         {[0, 1, 2].map((i) => (

@@ -6,6 +6,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   calculateStars,
   initialProgress,
+  isProgress,
   Progress,
   recordBuildResult,
   recordWorldResult,
@@ -54,7 +55,11 @@ export default function GamePage() {
 
 function Game() {
   const { language, t } = useLanguage();
-  const [progress, setProgress, ready] = useLocalStorage<Progress>('omarchy-quest-progress', initialProgress);
+  const [progress, setProgress, ready] = useLocalStorage<Progress>(
+    'omarchy-quest-progress',
+    initialProgress,
+    isProgress,
+  );
   const [view, setView] = useState<View>('home');
   const [activeWorld, setActiveWorld] = useState<World | null>(null);
   const [roundType, setRoundType] = useState<RoundType>('world');
