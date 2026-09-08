@@ -118,6 +118,7 @@ function Game() {
         onChallenge={startChallenge}
         onReference={() => setView('reference')}
         onBuild={startBuild}
+        onReset={() => setProgress(initialProgress)}
       />
     );
   }

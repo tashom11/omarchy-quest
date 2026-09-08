@@ -64,14 +64,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // localStorage, so a mismatch with this server-rendered default is
     // expected, not a bug.
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <body>
         <script
+          id="structured-data"
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-      </head>
-      <body>{children}</body>
+        {children}
+      </body>
     </html>
   );
 }

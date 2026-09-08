@@ -24,6 +24,8 @@ export type Dictionary = {
     siteButton: string;
     officialSource: string;
     buildButton: string;
+    resetButton: string;
+    resetConfirm: string;
   };
   build: {
     title: string;
@@ -90,6 +92,9 @@ const dictionaries: Record<Language, Dictionary> = {
       siteButton: '🌐 Site officiel Omarchy',
       officialSource: 'omarchy.org',
       buildButton: '🧩 Construis la commande',
+      resetButton: 'Réinitialiser ma progression',
+      resetConfirm:
+        'Réinitialiser toute ta progression (mondes, étoiles, streak) ? Cette action est irréversible.',
     },
     build: {
       title: 'Construis la commande',
@@ -165,6 +170,8 @@ const dictionaries: Record<Language, Dictionary> = {
       siteButton: '🌐 Omarchy official site',
       officialSource: 'omarchy.org',
       buildButton: '🧩 Build the command',
+      resetButton: 'Reset my progress',
+      resetConfirm: 'Reset all your progress (worlds, stars, streak)? This cannot be undone.',
     },
     build: {
       title: 'Build the command',

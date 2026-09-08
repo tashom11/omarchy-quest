@@ -11,13 +11,21 @@ type Props = {
   onChallenge: () => void;
   onReference: () => void;
   onBuild: () => void;
+  onReset: () => void;
 };
 
-export default function HomeScreen({ progress, ready, onPlay, onChallenge, onReference, onBuild }: Props) {
+export default function HomeScreen({ progress, ready, onPlay, onChallenge, onReference, onBuild, onReset }: Props) {
   const { t } = useLanguage();
   const completedWorlds = worldOrder.filter((w) => progress.worlds[w]?.complete).length;
   const bestOverallScore = Math.max(0, ...Object.values(progress.worlds).map((r) => r?.bestScore ?? 0));
   const hasPlayed = completedWorlds > 0;
+  const hasAnyProgress = hasPlayed || Boolean(progress.build) || progress.streak > 0;
+
+  function handleReset() {
+    if (window.confirm(t.home.resetConfirm)) {
+      onReset();
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 gap-10">
@@ -75,6 +83,12 @@ export default function HomeScreen({ progress, ready, onPlay, onChallenge, onRef
           {t.home.siteButton} ({t.home.officialSource})
         </a>
       </div>
+
+      {ready && hasAnyProgress && (
+        <button onClick={handleReset} className="font-mono text-xs text-slate-600 hover:text-danger underline">
+          {t.home.resetButton}
+        </button>
+      )}
     </div>
   );
 }
