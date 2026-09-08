@@ -53,11 +53,16 @@ The site will be available at `https://<user>.github.io/<repo-name>/`.
 npm run test
 ```
 
-Vitest covers the pure logic in [`lib/progress.ts`](lib/progress.ts) (stars,
-world unlocking, streak) and content integrity checks for
-[`data/commands.ts`](data/commands.ts) (unique ids, bilingual completeness,
-distractor counts). Both `npm run lint` and `npm run test` run in CI on
-every pull request (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+Vitest (with jsdom + React Testing Library) covers:
+- pure logic in [`lib/progress.ts`](lib/progress.ts) (stars, world unlocking, streak)
+- content integrity checks for [`data/commands.ts`](data/commands.ts) (unique ids, bilingual completeness, distractor counts)
+- component behavior: world locking/unlocking, the progress-reset confirm
+  flow, the result screen's heading, and the quiz timer's pause/resume
+
+Both `npm run lint` and `npm run test` run in CI on every pull request
+(see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)). There is no
+end-to-end/browser test suite yet (e.g. Playwright) — everything above runs
+against a simulated DOM, not a real browser.
 
 ## Adding quiz content
 
