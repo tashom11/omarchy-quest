@@ -244,6 +244,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.lang = language;
   }, [language]);
 
+  // First-visit-only browser language detection. Reads localStorage
+  // directly (not the `language` state) so this only fires when no
+  // explicit preference was ever saved; once it runs, the resulting
+  // choice is persisted like any manual toggle, so it never fires again.
+  useEffect(() => {
+    const stored = window.localStorage.getItem('omarchy-quest-language');
+    if (stored !== null) return;
+    const browserLanguage = navigator.language?.toLowerCase() ?? '';
+    if (!browserLanguage.startsWith('fr')) {
+      setLanguage('en');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const value = useMemo<LanguageContextValue>(
     () => ({ language, setLanguage, t: dictionaries[language] }),
     [language, setLanguage],

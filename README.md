@@ -47,6 +47,18 @@ Steps to enable it:
 
 The site will be available at `https://<user>.github.io/<repo-name>/`.
 
+## Tests
+
+```bash
+npm run test
+```
+
+Vitest covers the pure logic in [`lib/progress.ts`](lib/progress.ts) (stars,
+world unlocking, streak) and content integrity checks for
+[`data/commands.ts`](data/commands.ts) (unique ids, bilingual completeness,
+distractor counts). Both `npm run lint` and `npm run test` run in CI on
+every pull request (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
 ## Adding quiz content
 
 All questions live in [`data/commands.ts`](data/commands.ts). Each entry
@@ -97,7 +109,14 @@ lib/i18n.tsx            → FR/EN translation context and UI dictionary
   `<button>`s); the "Build the command" mode supports drag *and* click.
 - Visible focus states, ARIA live regions for quiz/build feedback, and a
   skip-to-content link.
-- `<html lang>` follows the selected UI language.
+- `<html lang>` follows the selected UI language; the UI language itself
+  defaults to the browser's language on a visitor's very first visit
+  (falls back to French), then stays as whatever was last chosen.
+- Respects `prefers-reduced-motion`: all animations/transitions are
+  disabled system-wide for users who request it.
+- Custom, bilingual 404 page (`app/not-found.tsx`).
+- A real Open Graph image is generated at build time
+  (`app/opengraph-image.tsx`), not just meta tags pointing to nothing.
 - `robots.txt` / `sitemap.xml` are generated at build time
   (`app/robots.ts`, `app/sitemap.ts`), with AI crawlers explicitly allowed.
 - `public/llms.txt` gives AI answer engines a short, structured summary of

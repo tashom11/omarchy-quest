@@ -41,3 +41,17 @@
   content: '_';
   @apply animate-cursor text-accent;
 }
+
+/* Respect the OS-level reduced-motion preference (WCAG 2.3.3 / RGAA 13.3):
+   disable every animation/transition globally rather than patching each
+   Tailwind utility individually, so nothing new can slip through unguarded. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
