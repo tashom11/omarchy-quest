@@ -1,0 +1,711 @@
+// Central question bank for the game. Each entry describes a concrete
+// situation, the correct Omarchy command/shortcut, and 3 plausible
+// distractors. To add content, just append a new object to `commands`.
+// No game logic here, data only.
+//
+// Commands/shortcuts themselves (answer, distractors) are not translated:
+// they are technical commands, identical in FR and EN. Only the pedagogical
+// text (prompt, explanation) is bilingual.
+
+export type World = 'windows' | 'apps' | 'themes' | 'system' | 'network' | 'screenshots';
+
+export type BilingualText = { fr: string; en: string };
+
+export type Command = {
+  id: string;
+  world: World;
+  prompt: BilingualText; // the light-hearted situation prompt
+  answer: string; // the correct answer (shortcut or CLI command)
+  distractors: [string, string, string]; // 3 wrong-but-plausible answers
+  explanation: BilingualText; // short teaching note shown after answering
+  difficulty: 1 | 2 | 3;
+};
+
+// Display metadata for each world (title, icon, short description).
+export const worldInfo: Record<World, { title: BilingualText; icon: string; description: BilingualText }> = {
+  windows: {
+    title: { fr: 'Fenêtres & Hyprland', en: 'Windows & Hyprland' },
+    icon: '🪟',
+    description: {
+      fr: 'Dompter le compositeur façon ninja du clavier',
+      en: 'Tame the compositor like a keyboard ninja',
+    },
+  },
+  apps: {
+    title: { fr: 'Applications', en: 'Applications' },
+    icon: '🚀',
+    description: {
+      fr: 'Lancer, ouvrir, jongler entre tes outils',
+      en: 'Launch, open, and juggle your tools',
+    },
+  },
+  themes: {
+    title: { fr: 'Thèmes', en: 'Themes' },
+    icon: '🎨',
+    description: {
+      fr: 'Relooker le bureau sans toucher la souris',
+      en: 'Re-skin the desktop without touching the mouse',
+    },
+  },
+  system: {
+    title: { fr: 'Système & CLI', en: 'System & CLI' },
+    icon: '🛠️',
+    description: {
+      fr: 'Les commandes `omarchy` qui sauvent la vie',
+      en: 'The `omarchy` commands that save the day',
+    },
+  },
+  network: {
+    title: { fr: 'Réseau & Bluetooth', en: 'Network & Bluetooth' },
+    icon: '📶',
+    description: {
+      fr: 'Se connecter sans quitter le clavier',
+      en: 'Connect without leaving the keyboard',
+    },
+  },
+  screenshots: {
+    title: { fr: 'Capture d’écran', en: 'Screenshots' },
+    icon: '📸',
+    description: {
+      fr: 'Immortaliser ton setup en un clin d’œil',
+      en: 'Immortalize your setup in a flash',
+    },
+  },
+};
+
+// World unlock order (the first world is always open).
+export const worldOrder: World[] = ['windows', 'apps', 'themes', 'system', 'network', 'screenshots'];
+
+export const commands: Command[] = [
+  // ───────────────────────── WINDOWS / HYPRLAND ─────────────────────────
+  {
+    id: 'win-01',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux basculer la disposition entre mosaïque et flottant pour la fenêtre active.',
+      en: 'You want to toggle the active window between tiled and floating layout.',
+    },
+    answer: 'Super + V',
+    distractors: ['Super + F', 'Super + Shift + Espace', 'Super + T'],
+    explanation: {
+      fr: 'Super + V bascule la fenêtre active entre mode flottant et mode mosaïque (tiling).',
+      en: 'Super + V toggles the active window between floating mode and tiling mode.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'win-02',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux déplacer le focus vers la fenêtre à ta gauche sans lâcher le clavier.',
+      en: 'You want to move focus to the window on your left without leaving the keyboard.',
+    },
+    answer: 'Super + flèche gauche',
+    distractors: ['Alt + Tab', 'Super + Ctrl + gauche', 'Super + H puis Entrée'],
+    explanation: {
+      fr: 'Les flèches directionnelles combinées à Super déplacent le focus entre les fenêtres voisines.',
+      en: 'Arrow keys combined with Super move focus between neighboring windows.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'win-03',
+    world: 'windows',
+    prompt: {
+      fr: 'Une fenêtre te gonfle, tu veux la fermer immédiatement.',
+      en: "A window is getting on your nerves and you want to close it right away.",
+    },
+    answer: 'Super + Q',
+    distractors: ['Alt + F4', 'Super + W', 'Super + Backspace'],
+    explanation: {
+      fr: 'Super + Q ferme proprement la fenêtre active (l’app peut encore demander confirmation).',
+      en: 'Super + Q cleanly closes the active window (the app may still ask for confirmation).',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'win-04',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux passer une fenêtre en plein écran pour te concentrer.',
+      en: 'You want to make a window fullscreen to focus.',
+    },
+    answer: 'Super + F',
+    distractors: ['Super + Shift + F', 'F11', 'Super + Maj + Entrée'],
+    explanation: {
+      fr: 'Super + F bascule le plein écran natif Hyprland pour la fenêtre active.',
+      en: "Super + F toggles Hyprland's native fullscreen for the active window.",
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'win-05',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux passer sur le workspace numéro 3.',
+      en: 'You want to switch to workspace number 3.',
+    },
+    answer: 'Super + 3',
+    distractors: ['Ctrl + Alt + 3', 'Super + Tab + 3', 'Super + Shift + 3'],
+    explanation: {
+      fr: 'Super + [chiffre] change de workspace directement, sans animation superflue.',
+      en: 'Super + [number] switches workspace directly, with no unnecessary animation.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'win-06',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux envoyer la fenêtre active vers le workspace 5 tout en restant sur ton workspace actuel.',
+      en: 'You want to send the active window to workspace 5 while staying on your current workspace.',
+    },
+    answer: 'Super + Shift + 5',
+    distractors: ['Super + 5', 'Super + Alt + 5', 'Super + Ctrl + Shift + 5'],
+    explanation: {
+      fr: 'Ajouter Shift à Super + [chiffre] déplace la fenêtre vers ce workspace sans t’y téléporter.',
+      en: 'Adding Shift to Super + [number] moves the window to that workspace without teleporting you there.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'win-07',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux redimensionner la fenêtre active au clavier.',
+      en: 'You want to resize the active window with the keyboard.',
+    },
+    answer: 'Super + Ctrl + flèches',
+    distractors: ['Super + Alt + flèches', 'Super + Shift + flèches', 'Ctrl + flèches'],
+    explanation: {
+      fr: 'Super + Ctrl + flèches redimensionne la fenêtre active dans la direction choisie.',
+      en: 'Super + Ctrl + arrows resizes the active window in the chosen direction.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'win-08',
+    world: 'windows',
+    prompt: {
+      fr: 'Tu veux faire flotter et centrer une fenêtre précise (une popup mal placée par exemple).',
+      en: 'You want to float and center a specific window (a misplaced popup, for example).',
+    },
+    answer: 'Super + Shift + Espace',
+    distractors: ['Super + Espace', 'Super + C', 'Super + Alt + Espace'],
+    explanation: {
+      fr: 'Super + Shift + Espace bascule la fenêtre en flottant ET la recentre à l’écran.',
+      en: 'Super + Shift + Space toggles the window to floating AND re-centers it on screen.',
+    },
+    difficulty: 2,
+  },
+
+  // ───────────────────────── APPLICATIONS ─────────────────────────
+  {
+    id: 'app-01',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux ouvrir le lanceur d’applications pour taper le nom d’un logiciel.',
+      en: "You want to open the app launcher to type a program's name.",
+    },
+    answer: 'Super',
+    distractors: ['Ctrl + Espace', 'Super + R', 'Alt + Espace'],
+    explanation: {
+      fr: 'Une simple pression sur Super ouvre le lanceur (walker/rofi selon config) : tape et Entrée.',
+      en: 'A single press of Super opens the launcher (walker/rofi depending on config): type and press Enter.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'app-02',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux ouvrir un nouveau terminal directement depuis le bureau.',
+      en: 'You want to open a new terminal directly from the desktop.',
+    },
+    answer: 'Super + Entrée',
+    distractors: ['Super + T', 'Ctrl + Alt + T', 'Super + Shift + Entrée'],
+    explanation: {
+      fr: 'Super + Entrée ouvre le terminal par défaut configuré dans Omarchy (Alacritty/Ghostty selon setup).',
+      en: 'Super + Enter opens the default terminal configured in Omarchy (Alacritty/Ghostty depending on setup).',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'app-03',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux transformer un site web en app dédiée façon "web-app" isolée.',
+      en: "You want to turn a website into a dedicated, isolated 'web-app'.",
+    },
+    answer: 'omarchy-webapp-install',
+    distractors: ['omarchy webapp new', 'omarchy install webapp', 'omarchy-pwa-create'],
+    explanation: {
+      fr: 'Le script omarchy-webapp-install crée un lanceur dédié pour un site, isolé comme une vraie app.',
+      en: 'The omarchy-webapp-install script creates a dedicated launcher for a site, isolated like a real app.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'app-04',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux basculer rapidement entre les fenêtres ouvertes façon "alt-tab" classique.',
+      en: 'You want to quickly switch between open windows, classic alt-tab style.',
+    },
+    answer: 'Super + Tab',
+    distractors: ['Alt + Tab', 'Super + Espace', 'Super + Shift + Tab'],
+    explanation: {
+      fr: 'Super + Tab ouvre le sélecteur de fenêtres pour naviguer entre toutes les apps ouvertes.',
+      en: 'Super + Tab opens the window switcher to navigate between all open apps.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'app-05',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux fermer une application qui plante et ne répond plus du tout.',
+      en: "You want to close an app that's crashed and stopped responding entirely.",
+    },
+    answer: 'Super + Ctrl + Q',
+    distractors: ['Super + Q', 'Ctrl + Alt + Échap', 'Super + Shift + Q'],
+    explanation: {
+      fr: 'Super + Ctrl + Q force la fermeture (kill) d’une fenêtre bloquée, contrairement au Super + Q classique.',
+      en: 'Super + Ctrl + Q force-kills a frozen window, unlike the regular Super + Q.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'app-06',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux voir la liste de toutes les commandes disponibles côté Omarchy.',
+      en: 'You want to see the list of all commands available on the Omarchy side.',
+    },
+    answer: 'omarchy commands',
+    distractors: ['omarchy help', 'omarchy list', 'omarchy --all'],
+    explanation: {
+      fr: 'omarchy commands liste tous les scripts/commandes `omarchy-*` disponibles sur le système.',
+      en: 'omarchy commands lists all the `omarchy-*` scripts/commands available on the system.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'app-07',
+    world: 'apps',
+    prompt: {
+      fr: 'Tu veux ouvrir le gestionnaire de fichiers en un raccourci.',
+      en: 'You want to open the file manager with a single shortcut.',
+    },
+    answer: 'Super + E',
+    distractors: ['Super + F', 'Super + Shift + E', 'Super + N'],
+    explanation: {
+      fr: 'Super + E ouvre le gestionnaire de fichiers par défaut configuré dans Omarchy.',
+      en: 'Super + E opens the default file manager configured in Omarchy.',
+    },
+    difficulty: 1,
+  },
+
+  // ───────────────────────── THEMES ─────────────────────────
+  {
+    id: 'theme-01',
+    world: 'themes',
+    prompt: {
+      fr: 'Tu veux voir la liste de tous les thèmes visuels installés.',
+      en: 'You want to see the list of all installed visual themes.',
+    },
+    answer: 'omarchy theme list',
+    distractors: ['omarchy themes', 'omarchy list themes', 'omarchy theme --all'],
+    explanation: {
+      fr: 'omarchy theme list affiche tous les thèmes disponibles dans ~/.config/omarchy/themes.',
+      en: 'omarchy theme list shows all themes available in ~/.config/omarchy/themes.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'theme-02',
+    world: 'themes',
+    prompt: {
+      fr: 'Tu veux appliquer le thème "tokyo-night" immédiatement.',
+      en: "You want to apply the 'tokyo-night' theme right now.",
+    },
+    answer: 'omarchy theme set tokyo-night',
+    distractors: ['omarchy apply tokyo-night', 'omarchy theme tokyo-night', 'omarchy set-theme tokyo-night'],
+    explanation: {
+      fr: 'omarchy theme set <nom> applique le thème à tout l’environnement (terminal, bar, apps).',
+      en: 'omarchy theme set <name> applies the theme across the whole environment (terminal, bar, apps).',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'theme-03',
+    world: 'themes',
+    prompt: {
+      fr: 'Tu veux ouvrir le sélecteur de thème au clavier, sans passer par le terminal.',
+      en: 'You want to open the theme picker from the keyboard, without touching the terminal.',
+    },
+    answer: 'Super + Ctrl + Espace',
+    distractors: ['Super + Shift + T', 'Super + T', 'Super + Alt + T'],
+    explanation: {
+      fr: 'Super + Ctrl + Espace ouvre le menu visuel de sélection de thème.',
+      en: 'Super + Ctrl + Space opens the visual theme selection menu.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'theme-04',
+    world: 'themes',
+    prompt: {
+      fr: 'Tu veux changer la police système utilisée dans le terminal et les menus.',
+      en: 'You want to change the system font used in the terminal and menus.',
+    },
+    answer: 'omarchy font set <nom>',
+    distractors: ['omarchy theme font <nom>', 'omarchy set font <nom>', 'omarchy font apply <nom>'],
+    explanation: {
+      fr: 'omarchy font set <nom> change la police globale de l’environnement.',
+      en: "omarchy font set <name> changes the environment's global font.",
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'theme-05',
+    world: 'themes',
+    prompt: {
+      fr: 'Tu veux basculer rapidement entre fond d’écran clair et sombre selon l’heure.',
+      en: 'You want to quickly toggle between light and dark wallpaper depending on the time of day.',
+    },
+    answer: 'omarchy theme toggle-mode',
+    distractors: ['omarchy dark-mode', 'omarchy theme switch', 'omarchy mode toggle'],
+    explanation: {
+      fr: 'omarchy theme toggle-mode bascule entre variante claire et sombre du thème actif.',
+      en: "omarchy theme toggle-mode switches between the active theme's light and dark variant.",
+    },
+    difficulty: 3,
+  },
+  {
+    id: 'theme-06',
+    world: 'themes',
+    prompt: {
+      fr: 'Tu veux changer le fond d’écran sans changer le reste du thème.',
+      en: 'You want to change the wallpaper without changing the rest of the theme.',
+    },
+    answer: 'omarchy background next',
+    distractors: ['omarchy wallpaper set', 'omarchy theme wallpaper', 'omarchy bg random'],
+    explanation: {
+      fr: 'omarchy background next passe au fond d’écran suivant dans la collection du thème actif.',
+      en: "omarchy background next moves to the next wallpaper in the active theme's collection.",
+    },
+    difficulty: 2,
+  },
+
+  // ───────────────────────── SYSTEM / OMARCHY CLI ─────────────────────────
+  {
+    id: 'sys-01',
+    world: 'system',
+    prompt: {
+      fr: 'Tu veux mettre à jour tout le système Omarchy en une commande.',
+      en: 'You want to update the whole Omarchy system with a single command.',
+    },
+    answer: 'omarchy update',
+    distractors: ['omarchy upgrade', 'omarchy sync', 'omarchy refresh'],
+    explanation: {
+      fr: 'omarchy update met à jour les paquets système et la configuration Omarchy elle-même.',
+      en: 'omarchy update updates system packages as well as the Omarchy configuration itself.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'sys-02',
+    world: 'system',
+    prompt: {
+      fr: 'Quelque chose déconne et tu veux lancer le diagnostic officiel.',
+      en: "Something's broken and you want to run the official diagnostic.",
+    },
+    answer: 'omarchy debug',
+    distractors: ['omarchy doctor', 'omarchy diagnose', 'omarchy check'],
+    explanation: {
+      fr: 'omarchy debug collecte les infos système utiles pour comprendre un bug ou demander de l’aide.',
+      en: 'omarchy debug collects useful system info to understand a bug or ask for help.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'sys-03',
+    world: 'system',
+    prompt: {
+      fr: 'Tu veux verrouiller ta session immédiatement avant de partir chercher un café.',
+      en: 'You want to lock your session right away before grabbing a coffee.',
+    },
+    answer: 'Super + L',
+    distractors: ['Super + Ctrl + L', 'Ctrl + Alt + L', 'Super + Shift + L'],
+    explanation: {
+      fr: 'Super + L verrouille l’écran instantanément via hyprlock.',
+      en: 'Super + L instantly locks the screen via hyprlock.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'sys-04',
+    world: 'system',
+    prompt: {
+      fr: 'Tu veux ouvrir le menu de sortie (déconnexion, extinction, redémarrage).',
+      en: 'You want to open the power menu (logout, shutdown, restart).',
+    },
+    answer: 'Super + Échap',
+    distractors: ['Super + Shift + Échap', 'Ctrl + Alt + Suppr', 'Super + Power'],
+    explanation: {
+      fr: 'Super + Échap ouvre le menu système avec les options d’extinction/redémarrage/déconnexion.',
+      en: 'Super + Escape opens the system menu with shutdown/restart/logout options.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'sys-05',
+    world: 'system',
+    prompt: {
+      fr: 'Tu veux voir la documentation locale d’Omarchy sans quitter le clavier.',
+      en: "You want to see Omarchy's local documentation without leaving the keyboard.",
+    },
+    answer: 'omarchy docs',
+    distractors: ['omarchy help --full', 'omarchy manual', 'omarchy --docs'],
+    explanation: {
+      fr: 'omarchy docs ouvre la documentation locale intégrée à la distribution.',
+      en: 'omarchy docs opens the local documentation bundled with the distro.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'sys-06',
+    world: 'system',
+    prompt: {
+      fr: 'Tu veux réinstaller uniquement la configuration Hyprland sans toucher au reste.',
+      en: 'You want to reinstall just the Hyprland config without touching anything else.',
+    },
+    answer: 'omarchy refresh hyprland',
+    distractors: ['omarchy reinstall hyprland', 'omarchy config reset hyprland', 'omarchy hyprland restore'],
+    explanation: {
+      fr: 'omarchy refresh <composant> restaure la config par défaut d’un composant précis.',
+      en: "omarchy refresh <component> restores a specific component's default config.",
+    },
+    difficulty: 3,
+  },
+  {
+    id: 'sys-07',
+    world: 'system',
+    prompt: {
+      fr: 'Tu veux voir la version actuelle d’Omarchy installée.',
+      en: 'You want to see the currently installed Omarchy version.',
+    },
+    answer: 'omarchy version',
+    distractors: ['omarchy --version', 'omarchy info', 'omarchy -v'],
+    explanation: {
+      fr: 'omarchy version affiche le numéro de version de la distribution installée.',
+      en: "omarchy version shows the installed distro's version number.",
+    },
+    difficulty: 1,
+  },
+
+  // ───────────────────────── NETWORK / BLUETOOTH ─────────────────────────
+  {
+    id: 'net-01',
+    world: 'network',
+    prompt: {
+      fr: 'Tu veux ouvrir les réglages Wi-Fi pour changer de réseau.',
+      en: 'You want to open Wi-Fi settings to switch networks.',
+    },
+    answer: 'omarchy-menu wifi',
+    distractors: ['omarchy wifi', 'omarchy network', 'omarchy-wifi-menu'],
+    explanation: {
+      fr: 'omarchy-menu wifi ouvre le sélecteur de réseaux Wi-Fi disponibles via iwd.',
+      en: 'omarchy-menu wifi opens the picker for available Wi-Fi networks via iwd.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'net-02',
+    world: 'network',
+    prompt: {
+      fr: 'Tu veux activer le Bluetooth pour appairer un casque.',
+      en: 'You want to turn on Bluetooth to pair a headset.',
+    },
+    answer: 'omarchy-menu bluetooth',
+    distractors: ['omarchy bluetooth on', 'omarchy-bt-toggle', 'omarchy enable bluetooth'],
+    explanation: {
+      fr: 'omarchy-menu bluetooth ouvre le menu de gestion Bluetooth (scan, appairage, connexion).',
+      en: 'omarchy-menu bluetooth opens the Bluetooth management menu (scan, pairing, connect).',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'net-03',
+    world: 'network',
+    prompt: {
+      fr: 'Tu veux voir rapidement l’état de ta connexion réseau (icône de la barre).',
+      en: 'You want to quickly check your network status (the bar icon).',
+    },
+    answer: 'Clic sur l’icône réseau de la barre système',
+    distractors: ['Super + N', 'Super + Shift + W', 'Super + I'],
+    explanation: {
+      fr: 'La barre système Omarchy affiche l’état réseau en direct, cliquable pour plus de détails.',
+      en: 'The Omarchy system bar shows live network status, clickable for more detail.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'net-04',
+    world: 'network',
+    prompt: {
+      fr: 'Tu veux te connecter à un réseau Wi-Fi en ligne de commande, sans interface graphique.',
+      en: 'You want to connect to a Wi-Fi network from the command line, no GUI.',
+    },
+    answer: 'iwctl',
+    distractors: ['nmcli connect', 'omarchy wifi connect', 'wpa_cli'],
+    explanation: {
+      fr: 'Omarchy utilise iwd comme gestionnaire réseau ; iwctl est son client interactif en CLI.',
+      en: 'Omarchy uses iwd as its network manager; iwctl is its interactive CLI client.',
+    },
+    difficulty: 3,
+  },
+  {
+    id: 'net-05',
+    world: 'network',
+    prompt: {
+      fr: 'Tu veux couper complètement le Wi-Fi pour économiser la batterie en avion.',
+      en: 'You want to fully cut Wi-Fi to save battery on a flight.',
+    },
+    answer: 'omarchy-menu airplane',
+    distractors: ['omarchy wifi off', 'omarchy-airplane-mode', 'omarchy network disable'],
+    explanation: {
+      fr: 'omarchy-menu airplane bascule le mode avion, coupant Wi-Fi et Bluetooth d’un coup.',
+      en: 'omarchy-menu airplane toggles airplane mode, cutting Wi-Fi and Bluetooth at once.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'net-06',
+    world: 'network',
+    prompt: {
+      fr: 'Un appareil Bluetooth déjà appairé refuse de se reconnecter, tu veux l’oublier et recommencer.',
+      en: "An already-paired Bluetooth device refuses to reconnect, and you want to forget it and start over.",
+    },
+    answer: 'bluetoothctl remove <adresse>',
+    distractors: ['omarchy bluetooth forget', 'bluetoothctl unpair', 'omarchy-bt-reset'],
+    explanation: {
+      fr: 'bluetoothctl remove <adresse MAC> supprime l’appairage pour repartir de zéro proprement.',
+      en: 'bluetoothctl remove <MAC address> removes the pairing so you can start fresh.',
+    },
+    difficulty: 3,
+  },
+
+  // ───────────────────────── SCREENSHOTS ─────────────────────────
+  {
+    id: 'shot-01',
+    world: 'screenshots',
+    prompt: {
+      fr: 'Tu veux capturer une zone précise de l’écran que tu sélectionnes à la souris.',
+      en: 'You want to capture a precise area of the screen that you select with the mouse.',
+    },
+    answer: 'Super + Shift + S',
+    distractors: ['Impr écran', 'Super + Shift + 4', 'Super + Alt + S'],
+    explanation: {
+      fr: 'Super + Shift + S ouvre l’outil de sélection de zone pour une capture ciblée.',
+      en: 'Super + Shift + S opens the area-selection tool for a targeted capture.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'shot-02',
+    world: 'screenshots',
+    prompt: {
+      fr: 'Tu veux capturer l’écran entier en un seul raccourci.',
+      en: 'You want to capture the whole screen with a single shortcut.',
+    },
+    answer: 'Impr écran',
+    distractors: ['Super + Impr écran', 'Super + Shift + Impr écran', 'Ctrl + Impr écran'],
+    explanation: {
+      fr: 'La touche Impr écran seule capture l’intégralité de l’écran actif.',
+      en: 'The Print Screen key alone captures the entire active screen.',
+    },
+    difficulty: 1,
+  },
+  {
+    id: 'shot-03',
+    world: 'screenshots',
+    prompt: {
+      fr: 'Tu veux capturer uniquement la fenêtre active, sans le reste du bureau.',
+      en: 'You want to capture only the active window, not the rest of the desktop.',
+    },
+    answer: 'Super + Impr écran',
+    distractors: ['Super + Shift + Impr écran', 'Alt + Impr écran', 'Super + Ctrl + Impr écran'],
+    explanation: {
+      fr: 'Super + Impr écran capture uniquement la fenêtre actuellement focus.',
+      en: 'Super + Print Screen captures only the currently focused window.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'shot-04',
+    world: 'screenshots',
+    prompt: {
+      fr: 'Tu veux lancer un enregistrement vidéo d’une zone de l’écran.',
+      en: 'You want to start a video recording of an area of the screen.',
+    },
+    answer: 'omarchy-screenrecord',
+    distractors: ['omarchy record', 'omarchy-capture video', 'omarchy screencast'],
+    explanation: {
+      fr: 'omarchy-screenrecord démarre un enregistrement d’écran (basé sur wf-recorder).',
+      en: 'omarchy-screenrecord starts a screen recording (based on wf-recorder).',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'shot-05',
+    world: 'screenshots',
+    prompt: {
+      fr: 'Tu viens de faire une capture, tu veux savoir où le fichier a été enregistré.',
+      en: 'You just took a screenshot and want to know where the file was saved.',
+    },
+    answer: '~/Pictures/Screenshots',
+    distractors: ['~/Downloads', '~/.cache/screenshots', '~/Desktop'],
+    explanation: {
+      fr: 'Par défaut, Omarchy range les captures dans ~/Pictures/Screenshots.',
+      en: 'By default, Omarchy stores screenshots in ~/Pictures/Screenshots.',
+    },
+    difficulty: 2,
+  },
+  {
+    id: 'shot-06',
+    world: 'screenshots',
+    prompt: {
+      fr: 'Tu veux que ta capture de zone soit copiée directement dans le presse-papier au lieu d’un fichier.',
+      en: 'You want your area capture copied straight to the clipboard instead of a file.',
+    },
+    answer: 'Super + Ctrl + Shift + S',
+    distractors: ['Super + Shift + S puis Ctrl + C', 'Super + Alt + Shift + S', 'Super + Shift + C'],
+    explanation: {
+      fr: 'Cette combinaison capture une zone et la place directement dans le presse-papier, sans fichier.',
+      en: 'This combo captures an area and places it straight in the clipboard, no file involved.',
+    },
+    difficulty: 3,
+  },
+];
+
+export function commandsByWorld(world: World): Command[] {
+  return commands.filter((c) => c.world === world);
+}
+
+// Ids excluded from "Build the command" mode: their `answer` isn't a real
+// command/shortcut to assemble (e.g. a descriptive sentence).
+const NON_BUILDABLE_IDS = new Set(['net-03']);
+
+// A command is "buildable" if its answer has at least 2 words: it can then
+// be split into clickable chunks to reassemble in order.
+export function buildableCommands(): Command[] {
+  return commands.filter(
+    (c) => !NON_BUILDABLE_IDS.has(c.id) && c.answer.trim().split(/\s+/).length >= 2,
+  );
+}
+
+export function splitIntoChunks(answer: string): string[] {
+  return answer.trim().split(/\s+/);
+}
