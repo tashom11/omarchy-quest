@@ -10,7 +10,7 @@ const DECOY_COUNT = 3;
 const DRAG_THRESHOLD_PX = 8; // distance before a press counts as a drag
 
 type Chunk = { id: string; text: string };
-type DragState = { id: string; text: string; x: number; y: number };
+type DragState = { id: string; x: number; y: number };
 
 type Props = {
   questions: Command[];
@@ -46,8 +46,20 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
   // Pointer-based drag (works for mouse AND touch), instead of the native
   // HTML5 drag-and-drop API which isn't reliably supported on touchscreens.
   const [drag, setDrag] = useState<DragState | null>(null);
+  // These mirror state the mount-once pointer listener (below) needs to read
+  // or write: since that listener isn't re-subscribed on every render (see
+  // why below), it must go through refs instead of closing over state/props
+  // that change over time, or it would act on stale data past the first
+  // question.
+  const dragRef = useRef<DragState | null>(null);
+  const placedIdsRef = useRef<string[]>([]);
   const pressStart = useRef<{ id: string; x: number; y: number } | null>(null);
   const justFinishedDragging = useRef(false);
+
+  function updateDrag(next: DragState | null) {
+    dragRef.current = next;
+    setDrag(next);
+  }
 
   const question = questions[index];
   const maxScore = questions.length * FIRST_TRY_POINTS;
@@ -65,6 +77,10 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
     setAttempts(0);
     setState('waiting');
   }, [index]);
+
+  useEffect(() => {
+    placedIdsRef.current = placedIds;
+  }, [placedIds]);
 
   function textOf(id: string) {
     return allChunks.find((c) => c.id === id)?.text ?? '';
@@ -107,29 +123,32 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
   }
 
   // Global pointer listener while a drag might be happening: unifies mouse
-  // and touch input via the Pointer Events API.
+  // and touch input via the Pointer Events API. Registered once (mount-only)
+  // and reads/writes `dragRef` instead of depending on `drag`, so the
+  // listeners aren't torn down and re-added on every pixel of movement.
   useEffect(() => {
     function onMove(e: PointerEvent) {
       const start = pressStart.current;
       if (!start) return;
-      const dx = e.clientX - start.x;
-      const dy = e.clientY - start.y;
 
-      if (!drag) {
+      if (!dragRef.current) {
+        const dx = e.clientX - start.x;
+        const dy = e.clientY - start.y;
         if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return;
-        setDrag({ id: start.id, text: textOf(start.id), x: e.clientX, y: e.clientY });
+        updateDrag({ id: start.id, x: e.clientX, y: e.clientY });
       } else {
-        setDrag((g) => (g ? { ...g, x: e.clientX, y: e.clientY } : g));
+        updateDrag({ ...dragRef.current, x: e.clientX, y: e.clientY });
       }
     }
 
     function onUp(e: PointerEvent) {
       const start = pressStart.current;
       pressStart.current = null;
-      if (!start || !drag) return;
+      const current = dragRef.current;
+      if (!start || !current) return;
 
-      dropAtPoint(drag.id, e.clientX, e.clientY);
-      setDrag(null);
+      dropAtPoint(current.id, e.clientX, e.clientY);
+      updateDrag(null);
       justFinishedDragging.current = true;
       setTimeout(() => {
         justFinishedDragging.current = false;
@@ -145,12 +164,13 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
       window.removeEventListener('pointercancel', onUp);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drag]);
+  }, []);
 
   function dropAtPoint(id: string, x: number, y: number) {
     const elementBelow = document.elementFromPoint(x, y);
     const targetChunk = elementBelow?.closest<HTMLElement>('[data-chunk-id]');
     const targetZone = elementBelow?.closest<HTMLElement>('[data-dropzone]');
+    const currentPlacedIds = placedIdsRef.current;
 
     if (targetZone?.dataset.dropzone === 'pool') {
       removeChunk(id);
@@ -158,10 +178,10 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
     }
     if (targetZone?.dataset.dropzone === 'placed') {
       if (targetChunk && targetChunk.dataset.chunkId !== id) {
-        const targetIndex = placedIds.indexOf(targetChunk.dataset.chunkId!);
-        moveChunk(id, targetIndex === -1 ? placedIds.length : targetIndex);
+        const targetIndex = currentPlacedIds.indexOf(targetChunk.dataset.chunkId!);
+        moveChunk(id, targetIndex === -1 ? currentPlacedIds.length : targetIndex);
       } else {
-        moveChunk(id, placedIds.length);
+        moveChunk(id, currentPlacedIds.length);
       }
     }
   }
@@ -204,7 +224,7 @@ export default function BuildMode({ questions, onFinish, onQuit }: Props) {
           className="fixed z-50 pointer-events-none px-3 py-1.5 rounded-md bg-accent text-background font-mono text-sm font-bold shadow-lg"
           style={{ left: drag.x, top: drag.y, transform: 'translate(-50%, -50%)' }}
         >
-          {drag.text}
+          {textOf(drag.id)}
         </div>
       )}
 

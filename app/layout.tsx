@@ -57,6 +57,35 @@ const structuredData = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 
+// Best-effort Content-Security-Policy via <meta>: this is a static export
+// with no server, so real CSP HTTP headers (or X-Frame-Options / a
+// frame-ancestors directive, which browsers ignore when set via <meta>)
+// aren't available — GitHub Pages serves files as-is. `unsafe-inline` is
+// required for both script-src and style-src because Next's static export
+// hydrates via an inline RSC payload script and React sets some inline
+// `style` attributes; there is no per-request nonce to use instead in a
+// prebuilt static file. What this CSP still meaningfully buys: no
+// externally-hosted script/style/image can be injected and loaded, no
+// exfiltration via fetch/XHR/WebSocket to a third-party origin, no
+// <object>/<embed> plugin execution, and no cross-origin form submission.
+// Caveat: a meta-tag CSP only governs content parsed *after* it in the
+// document, and the App Router always emits a handful of its own
+// same-origin <script src> tags earlier in <head> (outside our control
+// here) — harmless since script-src 'self' would allow them anyway, but
+// worth knowing this isn't equivalent to a real Content-Security-Policy
+// HTTP header covering the entire response.
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     // suppressHydrationWarning: LanguageProvider intentionally overwrites
@@ -64,12 +93,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // localStorage, so a mismatch with this server-rendered default is
     // expected, not a bug.
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta httpEquiv="Content-Security-Policy" content={csp} />
+      </head>
       <body>
         <script
           id="structured-data"
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
         />
         {children}
       </body>

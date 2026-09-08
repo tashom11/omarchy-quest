@@ -17,9 +17,13 @@ const config: Config = {
         danger: '#ff7b72',
         warning: '#f2cc60',
       },
+      // System font stacks only — no web font is loaded. This is deliberate:
+      // it keeps the site at zero extra network requests and avoids a flash
+      // of unstyled/invisible text, at the cost of a slightly different look
+      // across operating systems.
       fontFamily: {
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
-        sans: ['"Inter"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         shake: {
