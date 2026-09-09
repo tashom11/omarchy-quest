@@ -9,7 +9,14 @@ const description =
   'A quiz and command-building game to learn the keyboard shortcuts and CLI commands of Omarchy (Arch Linux + Hyprland). Free, open source, no account needed.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  // Origin only (no basePath). Next resolves the auto-discovered
+  // opengraph-image/icon file routes as `${basePath}/route` and joins that
+  // onto metadataBase: with a GitHub Pages deploy, basePath already equals
+  // this site's path segment, so a metadataBase that also included it (as
+  // `siteUrl` does below) produced a duplicated path — .../omarchy-quest
+  // /omarchy-quest/opengraph-image, a 404. `alternates.canonical` below
+  // uses the full `siteUrl` explicitly instead of relying on metadataBase.
+  metadataBase: new URL(new URL(siteUrl).origin),
   title,
   description,
   keywords: [
@@ -25,7 +32,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Omarchy Quest contributors' }],
   applicationName: 'Omarchy Quest',
   robots: { index: true, follow: true },
-  alternates: { canonical: '/' },
+  alternates: { canonical: siteUrl },
   openGraph: {
     type: 'website',
     title,
