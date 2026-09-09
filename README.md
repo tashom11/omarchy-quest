@@ -1,12 +1,32 @@
 # Omarchy Quest
 
-A small web game (quiz + command-building) to learn the keyboard shortcuts
-and commands of the [Omarchy](https://omarchy.org) distro while having fun.
-No backend, no database: progress is saved only in the browser's
-`localStorage`. Fully bilingual (French / English).
+🎮 **Play it live:** [tashom11.github.io/omarchy-quest](https://tashom11.github.io/omarchy-quest/)
+
+A small web game to help people actually memorize the keyboard shortcuts
+and CLI commands of the [Omarchy](https://omarchy.org) Linux distro,
+instead of looking them up every time. Answer quiz questions or drag-and-drop
+blocks to rebuild a command, unlock the next "world", and build a streak.
 
 This is an **unofficial, community-built** project with no affiliation to
 the official Omarchy team.
+
+## Why this exists
+
+Omarchy has a lot of keyboard-first workflows and `omarchy-*` commands that
+are hard to internalize just by reading a docs page once. This project turns
+that reference material into short, situational questions ("you want to do
+X — what's the shortcut?") so the muscle memory sticks.
+
+## Features
+
+- Two ways to learn: a timed multiple-choice quiz, and "Build the command"
+  (drag or click blocks into the right order).
+- Content organized into six worlds (windows, apps, themes, system,
+  network, screenshots), unlocked progressively.
+- Fully bilingual, French / English, with automatic browser-language
+  detection on first visit.
+- No backend, no database, no accounts: progress (stars, streak, best
+  score) is saved only in the browser's `localStorage`.
 
 ## Run locally
 
@@ -47,7 +67,7 @@ Steps to enable it:
 
 The site will be available at `https://<user>.github.io/<repo-name>/`.
 
-## Tests
+## Tests & local checks
 
 ```bash
 npm run test
@@ -80,7 +100,7 @@ follows this shape:
     en: 'You want to toggle between tiled and floating layout.',
   },
   answer: 'Super + V',
-  distractors: ['Super + F', 'Super + Shift + Espace', 'Super + T'],
+  distractors: ['Super + F', 'Super + Shift + Space', 'Super + T'],
   explanation: {
     fr: 'Super + V bascule la fenêtre active entre flottant et mosaïque.',
     en: 'Super + V toggles the active window between floating and tiled.',
@@ -134,5 +154,15 @@ scripts/pre-push.sh     → Local pre-push checks (lint, test, build), installed
 ## Contributing
 
 Issues and pull requests are welcome — this is meant to be a community
-project. Please keep code and comments in English (the app's bilingual
-content lives entirely in `data/commands.ts` and `lib/i18n.tsx`).
+project. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup, guidelines,
+and what to check before opening a PR.
+
+## Security
+
+This is a static, client-only app with no backend or user data leaving
+the browser. See [`SECURITY.md`](SECURITY.md) for the full threat model
+and how to report an issue.
+
+## License
+
+[MIT](LICENSE) — see the `LICENSE` file for the full text.

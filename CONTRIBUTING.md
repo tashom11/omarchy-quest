@@ -13,10 +13,13 @@ npm run dev
 
 ```bash
 npm run lint
+npm run test
 npm run build
 ```
 
-Both must pass; CI runs the same checks on every pull request.
+Both must pass; `npm install` also sets up a local `pre-push` git hook
+that runs the same checks automatically before every push (see
+[`scripts/pre-push.sh`](scripts/pre-push.sh)).
 
 ## Guidelines
 
