@@ -103,11 +103,12 @@ export default function QuizRound({ questions, onFinish, onQuit }: Props) {
         <button onClick={onQuit} className="text-slate-400 hover:text-slate-200">
           {t.quiz.quit}
         </button>
-        <div className="flex items-center gap-1 text-danger text-lg" aria-label={`${lives} / ${STARTING_LIVES} lives`}>
-          <span aria-hidden="true">
-            {'♥'.repeat(lives)}
-            <span className="text-border">{'♥'.repeat(STARTING_LIVES - lives)}</span>
-          </span>
+        <div className="flex items-center gap-1.5 text-lg" aria-label={`${lives} / ${STARTING_LIVES} lives`}>
+          {Array.from({ length: STARTING_LIVES }, (_, i) => (
+            <span key={i} aria-hidden="true" className={i < lives ? 'text-danger' : 'text-border'}>
+              ♥
+            </span>
+          ))}
         </div>
         <div className="text-accentSecondary">
           {t.quiz.score} {score}
