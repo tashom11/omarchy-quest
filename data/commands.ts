@@ -86,7 +86,7 @@ export const commands: Command[] = [
       en: 'You want to toggle the active window between tiled and floating layout.',
     },
     answer: 'Super + V',
-    distractors: ['Super + F', 'Super + Shift + Espace', 'Super + T'],
+    distractors: ['Super + F', 'Super + Shift + Space', 'Super + T'],
     explanation: {
       fr: 'Super + V bascule la fenêtre active entre mode flottant et mode mosaïque (tiling).',
       en: 'Super + V toggles the active window between floating mode and tiling mode.',
@@ -100,8 +100,8 @@ export const commands: Command[] = [
       fr: 'Tu veux déplacer le focus vers la fenêtre à ta gauche sans lâcher le clavier.',
       en: 'You want to move focus to the window on your left without leaving the keyboard.',
     },
-    answer: 'Super + flèche gauche',
-    distractors: ['Alt + Tab', 'Super + Ctrl + gauche', 'Super + H puis Entrée'],
+    answer: 'Super + Left',
+    distractors: ['Alt + Tab', 'Super + Ctrl + Left', 'Super + H then Enter'],
     explanation: {
       fr: 'Les flèches directionnelles combinées à Super déplacent le focus entre les fenêtres voisines.',
       en: 'Arrow keys combined with Super move focus between neighboring windows.',
@@ -131,7 +131,7 @@ export const commands: Command[] = [
       en: 'You want to make a window fullscreen to focus.',
     },
     answer: 'Super + F',
-    distractors: ['Super + Shift + F', 'F11', 'Super + Maj + Entrée'],
+    distractors: ['Super + Shift + F', 'F11', 'Super + Shift + Enter'],
     explanation: {
       fr: 'Super + F bascule le plein écran natif Hyprland pour la fenêtre active.',
       en: "Super + F toggles Hyprland's native fullscreen for the active window.",
@@ -175,8 +175,8 @@ export const commands: Command[] = [
       fr: 'Tu veux redimensionner la fenêtre active au clavier.',
       en: 'You want to resize the active window with the keyboard.',
     },
-    answer: 'Super + Ctrl + flèches',
-    distractors: ['Super + Alt + flèches', 'Super + Shift + flèches', 'Ctrl + flèches'],
+    answer: 'Super + Ctrl + Arrows',
+    distractors: ['Super + Alt + Arrows', 'Super + Shift + Arrows', 'Ctrl + Arrows'],
     explanation: {
       fr: 'Super + Ctrl + flèches redimensionne la fenêtre active dans la direction choisie.',
       en: 'Super + Ctrl + arrows resizes the active window in the chosen direction.',
@@ -190,8 +190,8 @@ export const commands: Command[] = [
       fr: 'Tu veux faire flotter et centrer une fenêtre précise (une popup mal placée par exemple).',
       en: 'You want to float and center a specific window (a misplaced popup, for example).',
     },
-    answer: 'Super + Shift + Espace',
-    distractors: ['Super + Espace', 'Super + C', 'Super + Alt + Espace'],
+    answer: 'Super + Shift + Space',
+    distractors: ['Super + Space', 'Super + C', 'Super + Alt + Space'],
     explanation: {
       fr: 'Super + Shift + Espace bascule la fenêtre en flottant ET la recentre à l’écran.',
       en: 'Super + Shift + Space toggles the window to floating AND re-centers it on screen.',
@@ -208,7 +208,7 @@ export const commands: Command[] = [
       en: "You want to open the app launcher to type a program's name.",
     },
     answer: 'Super',
-    distractors: ['Ctrl + Espace', 'Super + R', 'Alt + Espace'],
+    distractors: ['Ctrl + Space', 'Super + R', 'Alt + Space'],
     explanation: {
       fr: 'Une simple pression sur Super ouvre le lanceur (walker/rofi selon config) : tape et Entrée.',
       en: 'A single press of Super opens the launcher (walker/rofi depending on config): type and press Enter.',
@@ -222,8 +222,8 @@ export const commands: Command[] = [
       fr: 'Tu veux ouvrir un nouveau terminal directement depuis le bureau.',
       en: 'You want to open a new terminal directly from the desktop.',
     },
-    answer: 'Super + Entrée',
-    distractors: ['Super + T', 'Ctrl + Alt + T', 'Super + Shift + Entrée'],
+    answer: 'Super + Enter',
+    distractors: ['Super + T', 'Ctrl + Alt + T', 'Super + Shift + Enter'],
     explanation: {
       fr: 'Super + Entrée ouvre le terminal par défaut configuré dans Omarchy (Alacritty/Ghostty selon setup).',
       en: 'Super + Enter opens the default terminal configured in Omarchy (Alacritty/Ghostty depending on setup).',
@@ -253,7 +253,7 @@ export const commands: Command[] = [
       en: 'You want to quickly switch between open windows, classic alt-tab style.',
     },
     answer: 'Super + Tab',
-    distractors: ['Alt + Tab', 'Super + Espace', 'Super + Shift + Tab'],
+    distractors: ['Alt + Tab', 'Super + Space', 'Super + Shift + Tab'],
     explanation: {
       fr: 'Super + Tab ouvre le sélecteur de fenêtres pour naviguer entre toutes les apps ouvertes.',
       en: 'Super + Tab opens the window switcher to navigate between all open apps.',
@@ -268,7 +268,7 @@ export const commands: Command[] = [
       en: "You want to close an app that's crashed and stopped responding entirely.",
     },
     answer: 'Super + Ctrl + Q',
-    distractors: ['Super + Q', 'Ctrl + Alt + Échap', 'Super + Shift + Q'],
+    distractors: ['Super + Q', 'Ctrl + Alt + Escape', 'Super + Shift + Q'],
     explanation: {
       fr: 'Super + Ctrl + Q force la fermeture (kill) d’une fenêtre bloquée, contrairement au Super + Q classique.',
       en: 'Super + Ctrl + Q force-kills a frozen window, unlike the regular Super + Q.',
@@ -344,7 +344,7 @@ export const commands: Command[] = [
       fr: 'Tu veux ouvrir le sélecteur de thème au clavier, sans passer par le terminal.',
       en: 'You want to open the theme picker from the keyboard, without touching the terminal.',
     },
-    answer: 'Super + Ctrl + Espace',
+    answer: 'Super + Ctrl + Space',
     distractors: ['Super + Shift + T', 'Super + T', 'Super + Alt + T'],
     explanation: {
       fr: 'Super + Ctrl + Espace ouvre le menu visuel de sélection de thème.',
@@ -359,8 +359,8 @@ export const commands: Command[] = [
       fr: 'Tu veux changer la police système utilisée dans le terminal et les menus.',
       en: 'You want to change the system font used in the terminal and menus.',
     },
-    answer: 'omarchy font set <nom>',
-    distractors: ['omarchy theme font <nom>', 'omarchy set font <nom>', 'omarchy font apply <nom>'],
+    answer: 'omarchy font set <name>',
+    distractors: ['omarchy theme font <name>', 'omarchy set font <name>', 'omarchy font apply <name>'],
     explanation: {
       fr: 'omarchy font set <nom> change la police globale de l’environnement.',
       en: "omarchy font set <name> changes the environment's global font.",
@@ -371,14 +371,14 @@ export const commands: Command[] = [
     id: 'theme-05',
     world: 'themes',
     prompt: {
-      fr: 'Tu veux basculer rapidement entre fond d’écran clair et sombre selon l’heure.',
-      en: 'You want to quickly toggle between light and dark wallpaper depending on the time of day.',
+      fr: 'Tu veux réduire la température de couleur de l’écran le soir pour te reposer les yeux.',
+      en: 'You want to reduce your screen’s color temperature in the evening to rest your eyes.',
     },
-    answer: 'omarchy theme toggle-mode',
-    distractors: ['omarchy dark-mode', 'omarchy theme switch', 'omarchy mode toggle'],
+    answer: 'omarchy toggle nightlight',
+    distractors: ['omarchy nightlight on', 'omarchy theme nightlight', 'omarchy toggle warm-mode'],
     explanation: {
-      fr: 'omarchy theme toggle-mode bascule entre variante claire et sombre du thème actif.',
-      en: "omarchy theme toggle-mode switches between the active theme's light and dark variant.",
+      fr: 'omarchy toggle nightlight bascule le filtre de température de couleur de l’écran.',
+      en: 'omarchy toggle nightlight switches the screen’s color-temperature filter on or off.',
     },
     difficulty: 3,
   },
@@ -389,11 +389,11 @@ export const commands: Command[] = [
       fr: 'Tu veux changer le fond d’écran sans changer le reste du thème.',
       en: 'You want to change the wallpaper without changing the rest of the theme.',
     },
-    answer: 'omarchy background next',
+    answer: 'omarchy theme bg next',
     distractors: ['omarchy wallpaper set', 'omarchy theme wallpaper', 'omarchy bg random'],
     explanation: {
-      fr: 'omarchy background next passe au fond d’écran suivant dans la collection du thème actif.',
-      en: "omarchy background next moves to the next wallpaper in the active theme's collection.",
+      fr: 'omarchy theme bg next passe au fond d’écran suivant dans la collection du thème actif.',
+      en: "omarchy theme bg next moves to the next wallpaper in the active theme's collection.",
     },
     difficulty: 2,
   },
@@ -451,8 +451,8 @@ export const commands: Command[] = [
       fr: 'Tu veux ouvrir le menu de sortie (déconnexion, extinction, redémarrage).',
       en: 'You want to open the power menu (logout, shutdown, restart).',
     },
-    answer: 'Super + Échap',
-    distractors: ['Super + Shift + Échap', 'Ctrl + Alt + Suppr', 'Super + Power'],
+    answer: 'Super + Escape',
+    distractors: ['Super + Shift + Escape', 'Ctrl + Alt + Delete', 'Super + Power'],
     explanation: {
       fr: 'Super + Échap ouvre le menu système avec les options d’extinction/redémarrage/déconnexion.',
       en: 'Super + Escape opens the system menu with shutdown/restart/logout options.',
@@ -463,14 +463,14 @@ export const commands: Command[] = [
     id: 'sys-05',
     world: 'system',
     prompt: {
-      fr: 'Tu veux voir la documentation locale d’Omarchy sans quitter le clavier.',
-      en: "You want to see Omarchy's local documentation without leaving the keyboard.",
+      fr: 'Tu veux savoir si une mise à jour Omarchy est disponible, sans encore l’installer.',
+      en: 'You want to check whether an Omarchy update is available, without installing it yet.',
     },
-    answer: 'omarchy docs',
-    distractors: ['omarchy help --full', 'omarchy manual', 'omarchy --docs'],
+    answer: 'omarchy update available',
+    distractors: ['omarchy update check', 'omarchy update --dry-run', 'omarchy check update'],
     explanation: {
-      fr: 'omarchy docs ouvre la documentation locale intégrée à la distribution.',
-      en: 'omarchy docs opens the local documentation bundled with the distro.',
+      fr: 'omarchy update available vérifie s’il existe une mise à jour, sans rien installer.',
+      en: 'omarchy update available checks whether an update exists, without installing anything.',
     },
     difficulty: 2,
   },
@@ -510,14 +510,14 @@ export const commands: Command[] = [
     id: 'net-01',
     world: 'network',
     prompt: {
-      fr: 'Tu veux ouvrir les réglages Wi-Fi pour changer de réseau.',
-      en: 'You want to open Wi-Fi settings to switch networks.',
+      fr: 'Un pote chez toi veut le mot de passe du Wi-Fi, tu veux l’afficher direct dans le terminal.',
+      en: 'A friend at your place wants the Wi-Fi password, and you want to display it right in the terminal.',
     },
-    answer: 'omarchy-menu wifi',
-    distractors: ['omarchy wifi', 'omarchy network', 'omarchy-wifi-menu'],
+    answer: 'omarchy network password <interface>',
+    distractors: ['omarchy wifi password <interface>', 'omarchy network show-password', 'iwctl known-networks show'],
     explanation: {
-      fr: 'omarchy-menu wifi ouvre le sélecteur de réseaux Wi-Fi disponibles via iwd.',
-      en: 'omarchy-menu wifi opens the picker for available Wi-Fi networks via iwd.',
+      fr: 'omarchy network password <interface> affiche le mot de passe du réseau Wi-Fi actif.',
+      en: 'omarchy network password <interface> prints the active Wi-Fi network’s password.',
     },
     difficulty: 2,
   },
@@ -528,11 +528,11 @@ export const commands: Command[] = [
       fr: 'Tu veux activer le Bluetooth pour appairer un casque.',
       en: 'You want to turn on Bluetooth to pair a headset.',
     },
-    answer: 'omarchy-menu bluetooth',
+    answer: 'omarchy bluetooth power on',
     distractors: ['omarchy bluetooth on', 'omarchy-bt-toggle', 'omarchy enable bluetooth'],
     explanation: {
-      fr: 'omarchy-menu bluetooth ouvre le menu de gestion Bluetooth (scan, appairage, connexion).',
-      en: 'omarchy-menu bluetooth opens the Bluetooth management menu (scan, pairing, connect).',
+      fr: 'omarchy bluetooth power on active le Bluetooth, et le réglage est mémorisé au redémarrage.',
+      en: 'omarchy bluetooth power on turns Bluetooth on, remembered across reboots.',
     },
     difficulty: 2,
   },
@@ -540,14 +540,14 @@ export const commands: Command[] = [
     id: 'net-03',
     world: 'network',
     prompt: {
-      fr: 'Tu veux voir rapidement l’état de ta connexion réseau (icône de la barre).',
-      en: 'You want to quickly check your network status (the bar icon).',
+      fr: 'Tu veux voir l’état de ta connexion réseau depuis le terminal, sans passer par la souris.',
+      en: 'You want to check your network status from the terminal, without touching the mouse.',
     },
-    answer: 'Clic sur l’icône réseau de la barre système',
-    distractors: ['Super + N', 'Super + Shift + W', 'Super + I'],
+    answer: 'omarchy network status',
+    distractors: ['omarchy network info', 'omarchy status network', 'omarchy-network-check'],
     explanation: {
-      fr: 'La barre système Omarchy affiche l’état réseau en direct, cliquable pour plus de détails.',
-      en: 'The Omarchy system bar shows live network status, clickable for more detail.',
+      fr: 'omarchy network status affiche l’état réseau actif, le même qu’en direct dans la barre système.',
+      en: 'omarchy network status prints the active network status, the same one shown live in the system bar.',
     },
     difficulty: 1,
   },
@@ -570,14 +570,14 @@ export const commands: Command[] = [
     id: 'net-05',
     world: 'network',
     prompt: {
-      fr: 'Tu veux couper complètement le Wi-Fi pour économiser la batterie en avion.',
-      en: 'You want to fully cut Wi-Fi to save battery on a flight.',
+      fr: 'Tu veux passer ton DNS sur Cloudflare depuis le terminal.',
+      en: 'You want to switch your DNS to Cloudflare from the terminal.',
     },
-    answer: 'omarchy-menu airplane',
-    distractors: ['omarchy wifi off', 'omarchy-airplane-mode', 'omarchy network disable'],
+    answer: 'omarchy dns Cloudflare',
+    distractors: ['omarchy dns set cloudflare', 'omarchy network dns cloudflare', 'omarchy-menu dns cloudflare'],
     explanation: {
-      fr: 'omarchy-menu airplane bascule le mode avion, coupant Wi-Fi et Bluetooth d’un coup.',
-      en: 'omarchy-menu airplane toggles airplane mode, cutting Wi-Fi and Bluetooth at once.',
+      fr: 'omarchy dns Cloudflare configure le résolveur DNS système sur Cloudflare.',
+      en: 'omarchy dns Cloudflare sets the system DNS resolver to Cloudflare.',
     },
     difficulty: 2,
   },
@@ -588,11 +588,11 @@ export const commands: Command[] = [
       fr: 'Un appareil Bluetooth déjà appairé refuse de se reconnecter, tu veux l’oublier et recommencer.',
       en: "An already-paired Bluetooth device refuses to reconnect, and you want to forget it and start over.",
     },
-    answer: 'bluetoothctl remove <adresse>',
-    distractors: ['omarchy bluetooth forget', 'bluetoothctl unpair', 'omarchy-bt-reset'],
+    answer: 'omarchy bluetooth device forget <address>',
+    distractors: ['omarchy bluetooth forget <address>', 'bluetoothctl unpair <address>', 'omarchy-bt-reset'],
     explanation: {
-      fr: 'bluetoothctl remove <adresse MAC> supprime l’appairage pour repartir de zéro proprement.',
-      en: 'bluetoothctl remove <MAC address> removes the pairing so you can start fresh.',
+      fr: 'omarchy bluetooth device forget <adresse> supprime l’appairage pour repartir de zéro proprement.',
+      en: 'omarchy bluetooth device forget <address> removes the pairing so you can start fresh.',
     },
     difficulty: 3,
   },
@@ -606,7 +606,7 @@ export const commands: Command[] = [
       en: 'You want to capture a precise area of the screen that you select with the mouse.',
     },
     answer: 'Super + Shift + S',
-    distractors: ['Impr écran', 'Super + Shift + 4', 'Super + Alt + S'],
+    distractors: ['Print Screen', 'Super + Shift + 4', 'Super + Alt + S'],
     explanation: {
       fr: 'Super + Shift + S ouvre l’outil de sélection de zone pour une capture ciblée.',
       en: 'Super + Shift + S opens the area-selection tool for a targeted capture.',
@@ -620,8 +620,8 @@ export const commands: Command[] = [
       fr: 'Tu veux capturer l’écran entier en un seul raccourci.',
       en: 'You want to capture the whole screen with a single shortcut.',
     },
-    answer: 'Impr écran',
-    distractors: ['Super + Impr écran', 'Super + Shift + Impr écran', 'Ctrl + Impr écran'],
+    answer: 'Print Screen',
+    distractors: ['Super + Print Screen', 'Super + Shift + Print Screen', 'Ctrl + Print Screen'],
     explanation: {
       fr: 'La touche Impr écran seule capture l’intégralité de l’écran actif.',
       en: 'The Print Screen key alone captures the entire active screen.',
@@ -635,8 +635,8 @@ export const commands: Command[] = [
       fr: 'Tu veux capturer uniquement la fenêtre active, sans le reste du bureau.',
       en: 'You want to capture only the active window, not the rest of the desktop.',
     },
-    answer: 'Super + Impr écran',
-    distractors: ['Super + Shift + Impr écran', 'Alt + Impr écran', 'Super + Ctrl + Impr écran'],
+    answer: 'Super + Print Screen',
+    distractors: ['Super + Shift + Print Screen', 'Alt + Print Screen', 'Super + Ctrl + Print Screen'],
     explanation: {
       fr: 'Super + Impr écran capture uniquement la fenêtre actuellement focus.',
       en: 'Super + Print Screen captures only the currently focused window.',
@@ -650,11 +650,11 @@ export const commands: Command[] = [
       fr: 'Tu veux lancer un enregistrement vidéo d’une zone de l’écran.',
       en: 'You want to start a video recording of an area of the screen.',
     },
-    answer: 'omarchy-screenrecord',
+    answer: 'omarchy capture screenrecording',
     distractors: ['omarchy record', 'omarchy-capture video', 'omarchy screencast'],
     explanation: {
-      fr: 'omarchy-screenrecord démarre un enregistrement d’écran (basé sur wf-recorder).',
-      en: 'omarchy-screenrecord starts a screen recording (based on wf-recorder).',
+      fr: 'omarchy capture screenrecording démarre (ou arrête) un enregistrement d’écran.',
+      en: 'omarchy capture screenrecording starts (or stops) a screen recording.',
     },
     difficulty: 2,
   },
@@ -681,7 +681,7 @@ export const commands: Command[] = [
       en: 'You want your area capture copied straight to the clipboard instead of a file.',
     },
     answer: 'Super + Ctrl + Shift + S',
-    distractors: ['Super + Shift + S puis Ctrl + C', 'Super + Alt + Shift + S', 'Super + Shift + C'],
+    distractors: ['Super + Shift + S then Ctrl + C', 'Super + Alt + Shift + S', 'Super + Shift + C'],
     explanation: {
       fr: 'Cette combinaison capture une zone et la place directement dans le presse-papier, sans fichier.',
       en: 'This combo captures an area and places it straight in the clipboard, no file involved.',
@@ -694,16 +694,10 @@ export function commandsByWorld(world: World): Command[] {
   return commands.filter((c) => c.world === world);
 }
 
-// Ids excluded from "Build the command" mode: their `answer` isn't a real
-// command/shortcut to assemble (e.g. a descriptive sentence).
-const NON_BUILDABLE_IDS = new Set(['net-03']);
-
 // A command is "buildable" if its answer has at least 2 words: it can then
 // be split into clickable chunks to reassemble in order.
 export function buildableCommands(): Command[] {
-  return commands.filter(
-    (c) => !NON_BUILDABLE_IDS.has(c.id) && c.answer.trim().split(/\s+/).length >= 2,
-  );
+  return commands.filter((c) => c.answer.trim().split(/\s+/).length >= 2);
 }
 
 export function splitIntoChunks(answer: string): string[] {

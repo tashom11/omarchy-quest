@@ -32,11 +32,6 @@ describe('buildableCommands', () => {
       expect(splitIntoChunks(command.answer).length).toBeGreaterThanOrEqual(2);
     }
   });
-
-  it('excludes commands whose answer is not a real command to assemble', () => {
-    const buildable = buildableCommands();
-    expect(buildable.some((c) => c.id === 'net-03')).toBe(false);
-  });
 });
 
 describe('content integrity', () => {
