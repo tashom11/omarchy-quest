@@ -99,11 +99,11 @@ follows this shape:
     fr: 'Tu veux basculer la disposition entre mosaïque et flottant.',
     en: 'You want to toggle between tiled and floating layout.',
   },
-  answer: 'Super + V',
-  distractors: ['Super + F', 'Super + Shift + Space', 'Super + T'],
+  answer: 'Super + T',
+  distractors: ['Super + F', 'Super + Shift + Space', 'Super + V'],
   explanation: {
-    fr: 'Super + V bascule la fenêtre active entre flottant et mosaïque.',
-    en: 'Super + V toggles the active window between floating and tiled.',
+    fr: 'Super + T bascule la fenêtre active entre flottant et mosaïque.',
+    en: 'Super + T toggles the active window between floating and tiled.',
   },
   difficulty: 1,
 }
