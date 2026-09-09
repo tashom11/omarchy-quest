@@ -17,7 +17,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepare": "test -d .git && cp scripts/pre-push.sh .git/hooks/pre-push && chmod +x .git/hooks/pre-push || true"
   },
   "dependencies": {
     "next": "^15.1.0",

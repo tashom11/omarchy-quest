@@ -59,10 +59,12 @@ Vitest (with jsdom + React Testing Library) covers:
 - component behavior: world locking/unlocking, the progress-reset confirm
   flow, the result screen's heading, and the quiz timer's pause/resume
 
-Both `npm run lint` and `npm run test` run in CI on every pull request
-(see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)). There is no
-end-to-end/browser test suite yet (e.g. Playwright) — everything above runs
-against a simulated DOM, not a real browser.
+There's no CI for this small project: `npm install` installs a local
+`pre-push` git hook (see [`scripts/pre-push.sh`](scripts/pre-push.sh)) that
+runs `lint`, `test`, and `build` before every push, so the same checks run
+on your machine instead of on GitHub. There is no end-to-end/browser test
+suite yet (e.g. Playwright) — everything above runs against a simulated DOM,
+not a real browser.
 
 ## Adding quiz content
 
@@ -105,6 +107,7 @@ data/commands.ts        → Quiz content (questions, worlds)
 hooks/useLocalStorage.ts → Progress persistence
 lib/progress.ts         → Pure logic: stars, unlocking, streak
 lib/i18n.tsx            → FR/EN translation context and UI dictionary
+scripts/pre-push.sh     → Local pre-push checks (lint, test, build), installed by `npm install`
 .github/workflows/      → Automated GitHub Pages deployment
 ```
 
